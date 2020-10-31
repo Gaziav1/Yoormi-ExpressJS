@@ -1,10 +1,11 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jsonWebToken = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
 exports.postSignup = (req, res, next) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty) {
+  if (!errors.isEmpty()) {
     const error = new Error("Validation failed");
     error.statusCode = 422;
     error.data = errors.array();
@@ -16,18 +17,68 @@ exports.postSignup = (req, res, next) => {
   const name = req.body.name;
 
   bcrypt
-  .hash(password, 12)
-  .then((hashedPassword) => {
-    const user = new User({ name, email, password: hashedPassword });
-    return user.save();
-  })
-  .then(savedUser => { 
-    res.status(201).json({ userId: savedUser._id })
-  })
-  .catch(error => { 
-      if (!error.statusCode) { 
-          error.statusCode = 500
+    .hash(password, 12)
+    .then((hashedPassword) => {
+      const user = new User({ name, email, password: hashedPassword });
+      return user.save();
+    })
+    .then((savedUser) => {
+      res.status(201).json({
+        name: savedUser.name,
+        email: savedUser.email,
+        id: savedUser._id,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
       }
-      next(error)
-  })
+      next(error);
+    });
+};
+
+exports.postSignIn = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error("Login failed");
+    error.statusCode = 401;
+    error.data = errors.array();
+    throw error;
+  }
+  let loadedUser;
+  const email = req.body.email;
+  const password = req.body.password;
+  User.findOne({ email: email })
+    .then((user) => {
+      loadedUser = user;
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        const error = new Error("Login failed");
+        error.statusCode = 401;
+        throw error;
+      }
+      const token = jsonWebToken.sign(
+        {
+          email: loadedUser.email,
+          userId: loadedUser._id,
+        },
+        "Hinnamatoom"
+      );
+      res
+        .status(200)
+        .json({
+          token,
+          id: loadedUser._id.toString(),
+          name: loadedUser.name,
+          email: loadedUser.email,
+        });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
 };
