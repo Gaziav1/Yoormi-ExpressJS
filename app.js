@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -24,7 +25,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://Gaziav:2Ez4Arteezy@main.kx2ku.mongodb.net/Yoormi?retryWrites=true&w=majority"
+    process.env.DB_DBURI
   )
   .then((result) => {
     app.listen(3000);

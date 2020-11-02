@@ -12,7 +12,7 @@ exports.postSignup = (req, res, next) => {
     error.data = errors.array();
     throw error;
   }
-
+  
   const email = req.body.email;
   const password = req.body.password;
   const name = req.body.name;
@@ -65,7 +65,7 @@ exports.postSignIn = (req, res, next) => {
           email: loadedUser.email,
           userId: loadedUser._id,
         },
-        "Hinnamatoom"
+        process.env.JSWT_SECRET
       );
       res
         .status(200)
