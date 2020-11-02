@@ -8,6 +8,7 @@ exports.postSignup = (req, res, next) => {
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed");
     error.statusCode = 422;
+    console.log(errors.array())
     error.data = errors.array();
     throw error;
   }
@@ -55,7 +56,7 @@ exports.postSignIn = (req, res, next) => {
     })
     .then((matched) => {
       if (!matched) {
-        const error = new Error("Login failed");
+        const error = new Error("Passwords do not match");
         error.statusCode = 401;
         throw error;
       }
