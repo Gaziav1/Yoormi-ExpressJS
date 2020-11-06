@@ -3,6 +3,25 @@ const bcrypt = require("bcrypt");
 const jsonWebToken = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
+const accountSid = process.env.TWILIO_ACCOUNT_SID 
+const authToken = process.env.TWILIO_AUTH_TOKEN 
+const client = require('twilio')(accountSid, authToken)
+
+
+exports.postPhoneSignUp = (req, res, next) => { 
+  client.verify.services(process.env.TWILIO_SERVICE_ID).verifications.create({ to: req.body.phone, channel: "sms" })
+  .then(verification => { 
+    res.json(verification)
+  });  
+}
+
+exports.postVerifyPhone = (req, res, next) => { 
+  client.verify.services(process.env.TWILIO_SERVICE_ID).verificationChecks.create({ to: req.body.phone, code: req.body.code})
+  .then(verificationCheck => { 
+    res.json(verificationCheck)
+  })
+}
+ 
 exports.postSignup = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -12,10 +31,11 @@ exports.postSignup = (req, res, next) => {
     error.data = errors.array();
     throw error;
   }
-  
+
   const email = req.body.email;
   const password = req.body.password;
   const name = req.body.name;
+
 
   bcrypt
     .hash(password, 12)
