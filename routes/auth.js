@@ -5,8 +5,8 @@ const User = require("../models/user");
 
 const router = express.Router();
 
-router.post("/phoneAuth", authController.postPhoneSignUp)
-router.post("/phoneVerify", authController.postVerifyPhone)
+router.post("/phoneauth", authController.postPhoneSignUp)
+router.post("/phoneverify", authController.postVerifyPhone)
 
 router.post(
   "/signup",
