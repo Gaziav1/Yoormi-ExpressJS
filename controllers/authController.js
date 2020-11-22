@@ -24,10 +24,11 @@ exports.postVerifyPhone = (req, res, next) => {
     .services(process.env.TWILIO_SERVICE_ID)
     .verificationChecks.create({ to: req.body.phone, code: req.body.code })
     .then((verificationCheck) => {
+      console.log(verificationCheck)
       if (verificationCheck.valid) {
-        User.findOne({ phone: verificationCheck.phone }).then((user) => {
+        User.findOne({ phone: req.body.phone }).then((user) => {
           if (!user) {
-            const newUser = new User({ phone: res.body.phone });
+            const newUser = new User({ phone: req.body.phone });
             return newUser.save().then((user) => {
               const token = jsonWebToken.sign(
                 {
@@ -46,6 +47,7 @@ exports.postVerifyPhone = (req, res, next) => {
               },
               process.env.JSWT_SECRET
             );
+            console.log(token)
             res.json({ token, user });
           }
         });
