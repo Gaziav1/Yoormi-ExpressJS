@@ -24,7 +24,6 @@ exports.postVerifyPhone = (req, res, next) => {
     .services(process.env.TWILIO_SERVICE_ID)
     .verificationChecks.create({ to: req.body.phone, code: req.body.code })
     .then((verificationCheck) => {
-      console.log(verificationCheck)
       if (verificationCheck.valid) {
         User.findOne({ phone: req.body.phone }).then((user) => {
           if (!user) {
@@ -47,10 +46,12 @@ exports.postVerifyPhone = (req, res, next) => {
               },
               process.env.JSWT_SECRET
             );
-            console.log(token)
+            console.log(token);
             res.json({ token, user });
           }
         });
+      } else {
+        throw Error("Code is not valid");
       }
     })
     .catch((error) => {
@@ -58,74 +59,7 @@ exports.postVerifyPhone = (req, res, next) => {
     });
 };
 
-exports.postSignup = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error("Validation failed");
-    error.statusCode = 422;
-    console.log(errors.array());
-    error.data = errors.array();
-    throw error;
-  }
-
-  const email = req.body.email;
-  const password = req.body.password;
-  const name = req.body.name;
-
-  bcrypt
-    .hash(password, 12)
-    .then((hashedPassword) => {
-      const user = new User({ name, email, password: hashedPassword });
-      return user.save();
-    })
-    .then((savedUser) => {
-      res.status(201).json({
-        name: savedUser.name,
-        email: savedUser.email,
-        id: savedUser._id,
-      });
-    })
-    .catch((error) => {
-      if (!error.statusCode) {
-        error.statusCode = 500;
-      }
-      next(error);
-    });
-};
-
-exports.postSignIn = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error("Login failed");
-    error.statusCode = 401;
-    error.data = errors.array();
-    throw error;
-  }
-  let loadedUser;
-  const email = req.body.email;
-  const password = req.body.password;
-  User.findOne({ email: email })
-    .then((user) => {
-      loadedUser = user;
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        const error = new Error("Passwords do not match");
-        error.statusCode = 401;
-        throw error;
-      }
-      res.status(200).json({
-        token,
-        id: loadedUser._id.toString(),
-        name: loadedUser.name,
-        email: loadedUser.email,
-      });
-    })
-    .catch((error) => {
-      if (!error.statusCode) {
-        error.statusCode = 500;
-      }
-      next(error);
-    });
+exports.postSaveImageAndName = (req, res, next) => {
+    console.log(req.body.name)
+    console.log(req.body.image)
 };
