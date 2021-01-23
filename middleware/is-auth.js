@@ -1,10 +1,17 @@
 const jwt = require("jsonwebtoken")
 
 module.exports = (req, res, next) => {
-  const token = req.get("token").split(" ")[1];
+  const tokenHeader = req.get("token");
+  if (!tokenHeader) { 
+    next()
+    return
+  }
+
+  const token = tokenHeader.split(" ")[1];
+  
   let decodedToken;
   try {
-    decodedToken = jwt.verify(token, JSWT_SECRET);
+    decodedToken = jwt.verify(token, process.env.JSWT_SECRET);
   } catch (err) {
     err.statusCode = 500;
     throw err;
@@ -17,5 +24,4 @@ module.exports = (req, res, next) => {
   }
   req.userId = decodedToken.userId
   next()
-
 };

@@ -37,7 +37,7 @@ exports.postVerifyPhone = (req, res, next) => {
                 process.env.JSWT_SECRET
               );
               res.json({ token, user });
-            });
+            });     
           } else {
             const token = jsonWebToken.sign(
               {
@@ -46,7 +46,6 @@ exports.postVerifyPhone = (req, res, next) => {
               },
               process.env.JSWT_SECRET
             );
-            console.log(token);
             res.json({ token, user });
           }
         });
@@ -61,5 +60,5 @@ exports.postVerifyPhone = (req, res, next) => {
 
 exports.postSaveImageAndName = (req, res, next) => {
     console.log(req.body.name)
-    console.log(req.body.image)
+    console.log(req.file)
 };

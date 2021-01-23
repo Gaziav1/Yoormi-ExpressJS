@@ -3,40 +3,13 @@ const express = require("express");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const multer = require("multer");
-
+const isAuth = require("./middleware/is-auth")
+const storageManager = require("./managers/storageManager")
 const app = express();
-
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    //TODO: Change name to userID
-    if (req.body.name) {
-      let path = `public/images/${req.body.name}`;
-      if (!req.body.adId) {
-        path += "/avatar";
-      } else {
-        path += `/ads/${req.body.adId}`;
-      }
-
-      if (!fs.existsSync(path)) {
-        console.log("making dir");
-        fs.mkdirSync(path, { recursive: true });
-      }
-
-      return cb(null, path);
-    } else {
-      return cb(err, null);
-    }
-  },
-  fileName: (req, file, cb) => {
-    cb(null, Date().toISOString() + "-" + file.originalname);
-  },
-});
-
 const authRouter = require("./routes/auth");
 
 app.use(bodyParser.json());
-app.use(multer({ storage: fileStorage }).single("image"));
+app.use(isAuth, storageManager.storageSetup);
 app.use("/auth", authRouter);
 
 app.get("/", (req, res, next) => {
