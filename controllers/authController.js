@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jsonWebToken = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const user = require("../models/user");
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -37,7 +38,7 @@ exports.postVerifyPhone = (req, res, next) => {
                 process.env.JSWT_SECRET
               );
               res.json({ token, user });
-            });     
+            });
           } else {
             const token = jsonWebToken.sign(
               {
@@ -59,6 +60,19 @@ exports.postVerifyPhone = (req, res, next) => {
 };
 
 exports.postSaveImageAndName = (req, res, next) => {
-    console.log(req.body.name)
-    console.log(req.file)
+  User.findOne({ _id: req.userId })
+    .then((user) => {
+      user.name = req.body.name;
+      user.image = req.file.path;
+      return user.save();
+    })
+    .then((savedUser) => {
+      const { __v, ...rightUser } = savedUser;
+      console.log(rightUser)
+      res.json({ _id: savedUser._id, name: savedUser.name, image: savedUser.image, phone: savedUser.phone });
+    })
+
+    .catch((error) => {
+      next(error);
+    });
 };

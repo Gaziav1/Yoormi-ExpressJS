@@ -1,6 +1,14 @@
 const multer = require("multer");
 const fs = require("fs")
 
+const filename = (req, file, cb) => {
+  if (!req.body.adId) { 
+    cb(null, req.userId);
+    return
+  }
+  cb(null, "hey")
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
 
@@ -19,9 +27,7 @@ const storage = multer.diskStorage({
 
     return cb(null, path);
   },
-  fileName: (req, file, cb) => {
-    cb(null, Date().toISOString() + "-" + file.originalname);
-  }
+  filename
 });
 
 const filter = (req, file, cb) => {
