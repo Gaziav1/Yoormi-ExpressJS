@@ -60,6 +60,7 @@ exports.postVerifyPhone = (req, res, next) => {
 };
 
 exports.postSaveImageAndName = (req, res, next) => {
+  
   User.findOne({ _id: req.userId })
     .then((user) => {
       user.name = req.body.name;
@@ -67,8 +68,6 @@ exports.postSaveImageAndName = (req, res, next) => {
       return user.save();
     })
     .then((savedUser) => {
-      const { __v, ...rightUser } = savedUser;
-      console.log(rightUser)
       res.json({ _id: savedUser._id, name: savedUser.name, image: savedUser.image, phone: savedUser.phone });
     })
 

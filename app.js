@@ -3,14 +3,16 @@ const express = require("express");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const isAuth = require("./middleware/is-auth")
-const storageManager = require("./managers/storageManager")
+const isAuth = require("./middleware/is-auth");
+const storageManager = require("./managers/storageManager");
 const app = express();
 const authRouter = require("./routes/auth");
+const adCreationRouter = require("./routes/adCreation");
 
 app.use(bodyParser.json());
 app.use(isAuth, storageManager.storageSetup);
 app.use("/auth", authRouter);
+app.use("/ads", adCreationRouter);
 
 app.get("/", (req, res, next) => {
   res.json({ hello: "world" });

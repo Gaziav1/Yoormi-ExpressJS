@@ -11,7 +11,7 @@ const filename = (req, file, cb) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-
+    
     let path = `public/images/${req.userId}`;
     if (!req.body.adId) {
       //if adId exists than its ad images, not user profile photo
@@ -34,7 +34,6 @@ const filter = (req, file, cb) => {
   if (!req.userId) {
     return cb(null, false);
   }
-  
   if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
     return cb(null, true);
   }
