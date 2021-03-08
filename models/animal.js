@@ -22,6 +22,10 @@ const animalSchema = new Schema({
         type: String,
         required: true
     },
+    ownerId: { 
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     imageURLs: { 
         type: [String],
         required: true

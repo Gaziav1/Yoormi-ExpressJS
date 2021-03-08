@@ -2,7 +2,6 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jsonWebToken = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
-const user = require("../models/user");
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;

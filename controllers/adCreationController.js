@@ -1,10 +1,9 @@
 const express = require("express");
-const adModel = require("../models/ad")
-const animalModel = require("../models/animal") 
+const adModel = require("../models/ad");
+const animalModel = require("../models/animal");
 
-const saveAnimalAndAd = (req, res, next) => { 
-
-}
+const postSaveAnimalAndAd = (req, res, next) => {};
 
 
-module.exports.saveAnimalAndAd = saveAnimalAndAd
+
+module.exports.postSaveAnimalAndAd = postSaveAnimalAndAd;

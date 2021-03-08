@@ -8,11 +8,13 @@ const storageManager = require("./managers/storageManager");
 const app = express();
 const authRouter = require("./routes/auth");
 const adCreationRouter = require("./routes/adCreation");
+const animalSubtypesRouter = require("./routes/animalSubtypes");
 
 app.use(bodyParser.json());
 app.use(isAuth, storageManager.storageSetup);
 app.use("/auth", authRouter);
 app.use("/ads", adCreationRouter);
+app.use("/animalInfo", animalSubtypesRouter);
 
 app.get("/", (req, res, next) => {
   res.json({ hello: "world" });

@@ -3,6 +3,7 @@ const adCreationController = require("../controllers/adCreationController");
 
 const router = express.Router();
 
-router.post("/createAd", adCreationController.saveAnimalAndAd)
+router.post("/createAd", adCreationController.postSaveAnimalAndAd)
+
 
 module.exports = router
