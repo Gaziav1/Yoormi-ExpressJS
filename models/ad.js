@@ -23,6 +23,10 @@ const adSchema = new Schema(
       type: Number,
       required: false
     },
+    isReadyForSale: { 
+      type: Boolean, 
+      required: true
+    }
   },
   { timestamps: true }
 );

@@ -3,12 +3,12 @@ const AnimalSubtype = require("../models/animalSubtypes");
 
 const getAnimalSubtypes = (req, res, next) => {
   let animalType = req.query.type;
-  AnimalSubtype.find({})
+  AnimalSubtype.find({ animalType })
     .then((animalSubtypes) => {
       if (animalSubtypes.length == 0) {
         throw Error("Cannot find animal subtypes");
       }
-      res.json({ animalSubtypes })
+      res.json(animalSubtypes)
     })
     .catch((err) => {
       err.statusCode = 404;
