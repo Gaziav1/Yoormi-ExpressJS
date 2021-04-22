@@ -12,8 +12,13 @@ const adSchema = new Schema(
       required: true,
     },
     address: {
-      type: String,
       required: false,
+      lat: { 
+        type: String
+      },
+      long: { 
+        type: String
+      }
     },
     text: {
       type: String,
