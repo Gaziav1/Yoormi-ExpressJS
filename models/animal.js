@@ -18,7 +18,7 @@ const animalSchema = new Schema({
         type: Boolean, 
         required: true
     },
-    animaleSubtype: { 
+    animalSubtype: { 
         type: String,
         required: true
     },

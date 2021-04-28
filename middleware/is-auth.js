@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken")
+const User = require("../models/user")
 
 module.exports = (req, res, next) => {
   const tokenHeader = req.get("token");
-
   if (!tokenHeader) { 
     next()
     return
@@ -24,5 +24,14 @@ module.exports = (req, res, next) => {
     throw err;
   }
   req.userId = decodedToken.userId
-  next()
+  
+  User.findOne({ _id: req.userId })
+    .then(user => { 
+      req.user = user
+      next()
+  })
+    .catch(error => { 
+      next()
+      //Maybe change architecture of this method later 
+    })
 };

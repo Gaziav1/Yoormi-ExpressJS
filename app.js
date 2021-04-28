@@ -1,8 +1,6 @@
 require("dotenv").config();
-console.log(process.env.DB_DBURI)
 const express = require("express");
 const fs = require("fs");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const isAuth = require("./middleware/is-auth");
 const storageManager = require("./managers/storageManager");
@@ -11,7 +9,9 @@ const authRouter = require("./routes/auth");
 const adCreationRouter = require("./routes/adCreation");
 const animalSubtypesRouter = require("./routes/animalSubtypes");
 
-app.use(bodyParser.json());
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 app.use(isAuth, storageManager.storageSetup);
 app.use("/auth", authRouter);
 app.use("/ads", adCreationRouter);
