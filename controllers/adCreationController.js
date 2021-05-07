@@ -3,6 +3,21 @@ const { Mongoose } = require("mongoose");
 const Ad = require("../models/ad");
 const Animal = require("../models/animal");
 
+const getAds = (req, res, next) => { 
+    Ad.find({})
+    .populate({ path: 'ownerId', select: 'name image'  })
+    .populate({ path: 'animalId', select: '-ownerId -__v'  })
+    .select("-__v")
+    .then(animals => { 
+       res.json(animals)
+    })
+    .catch(error => { 
+        error.message = "Cannot found resource"
+        error.statusCode = 404
+        next(error)
+    })
+}
+
 const postSaveAnimalAndAd = (req, res, next) => {
   let imageURLs = req.files.images.map((item) => item.path);
   let name = req.body.name;
@@ -56,3 +71,4 @@ function saveAdFromAnimal(animal, req) {
 }
 
 module.exports.postSaveAnimalAndAd = postSaveAnimalAndAd;
+module.exports.getAds = getAds;

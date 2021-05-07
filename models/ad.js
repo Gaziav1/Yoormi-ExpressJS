@@ -5,11 +5,13 @@ const adSchema = new Schema(
   {
     animalId: {
       type: Schema.Types.ObjectId,
-      required: true,
+      ref: "Animal",
+      required: true
     },
     ownerId: {
       type: Schema.Types.ObjectId,
-      required: true,
+      ref: "User",
+      required: true
     },
     address: {
       required: false,
