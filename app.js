@@ -9,9 +9,9 @@ const authRouter = require("./routes/auth");
 const adCreationRouter = require("./routes/adCreation");
 const animalSubtypesRouter = require("./routes/animalSubtypes");
 
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(isAuth, storageManager.storageSetup);
 app.use("/auth", authRouter);
 app.use("/ads", adCreationRouter);
